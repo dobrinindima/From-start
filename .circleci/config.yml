@@ -14,6 +14,7 @@ commands:
             sudo gem update --system
             sudo gem install bundler
             sudo bundle config set path 'vendor/bundle'
+            sudo bundle install --retry 3
   rspec:
     steps:
       - checkout
