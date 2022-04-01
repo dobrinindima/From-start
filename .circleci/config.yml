@@ -2,7 +2,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/ruby:2.6.5-browsers
+      - image: cimg/ruby:2.6.9-browsers
 
 commands:
   bundle:
