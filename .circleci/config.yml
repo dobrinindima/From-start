@@ -8,7 +8,7 @@ commands:
   bundle:
     steps:
       - checkout
-      - run: |
+      - run:
           name: Install gems 
           command: |
             gem update --system
@@ -18,14 +18,14 @@ commands:
   lint:
     steps:
       - checkout
-      - run: |
+      - run:
           name: Rubocop
           command: bundle exec rubocop spec
   rspec:
     steps:
       - checkout
       - bundle
-      - run: |
+      - run:
           name: Run tests
           command: |
             mkdir /tmp/test-results
