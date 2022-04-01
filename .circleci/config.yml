@@ -2,7 +2,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/ruby:2.7.3-browsers
+      - image: cimg/ruby:2.6.5-browsers
 
 jobs:
   bundle:
@@ -44,4 +44,8 @@ workflows:
   build:
     jobs:
       - bundle
-      - rspec
+      - rspec:
+          steps:
+            - bundle
+            - lint
+            - rspec
