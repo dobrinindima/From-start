@@ -1,0 +1,73 @@
+version: 2.1
+    jobs:
+      bundle:
+        docker:
+          # Все проверки мы раним на последней стабильной версии Node.js
+          - image: circleci/ruby:2.7.3-browsers
+    
+        working_directory: ~/repo
+    
+        steps:
+          # Забираем код текущего коммита
+          - checkout
+          # Пробуем достать зависимости из кеша, ключ — хэшсумма от yarn.lock
+          - restore_cache:
+              keys:
+                - js-dependencies-{{ checksum "yarn.lock" }}
+          # Запускает yarn, если зависимости уже достались из кеша, он заметит
+          - run:
+              name: Install Dependencies
+              command: yarn
+          # Сохраняем новую версию кеша зависимостей
+          - save_cache:
+              key: js-dependencies-{{ checksum "yarn.lock" }}
+              paths:
+                - ./node_modules
+          # Запускаем линтинг кода
+          - run:
+              name: Install gems
+              command: |
+                gem update --system
+                gem install bundler
+                bundle config set path 'vendor/bundle'
+                bundle install --retry 3
+      rspec:
+        docker:
+          # Все проверки мы раним на последней стабильной версии Node.js
+          - image: circleci/ruby:2.7.3-browsers
+    
+        working_directory: ~/repo
+    
+        steps:
+          # Первые 4 шага аналогичны предыдущему примеру
+          # Запускаем тесты
+          - run:
+              name: Run tests
+              command: |
+                mkdir /tmp/test-results
+                TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+                bundle exec rspec --profile \
+                                  --order random \
+                                  --format documentation \
+                                  --format html \
+                                  --out reports/rspec_results.html \
+                                  -- \
+                                  $TEST_FILES
+    
+    workflows:
+      version: 2.1
+      check-pr:
+        jobs:
+          - bundle
+              # Линтинг будем запускать только для не-мастер веток
+              # Если код УЖЕ в мастере, значит он проверен
+              # filters:
+              #   branches:
+              #     ignore:
+              #       - master
+          - rspec
+              # Тоже самое для тестов
+              # filters:
+              #   branches:
+              #     ignore:
+              #       - master
