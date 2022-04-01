@@ -2,6 +2,8 @@ require 'spec_helper'
 
 RSpec.describe 'The-Internet page', type: :feature do
   #added some code
+  #added some code
+  #added some code
 
     before { visit '/'}
 
