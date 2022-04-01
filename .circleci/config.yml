@@ -27,6 +27,7 @@ jobs:
     executor: default
     steps:
       - checkout
+      - bundle
       - run: 
           name: Run tests
           command: |
@@ -44,8 +45,4 @@ workflows:
   build:
     jobs:
       - bundle
-      - rspec:
-          steps:
-            - bundle
-            - lint
-            - rspec
+      - rspec
