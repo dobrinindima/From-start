@@ -13,12 +13,6 @@ commands:
           command: |
             gem update --system
             gem install bundler
-  lint:
-    steps:
-      - checkout
-      - run:
-          name: Rubocop
-          command: bundle exec rubocop spec
   rspec:
     steps:
       - checkout
@@ -41,11 +35,6 @@ jobs:
     executor: default
     steps:
       - bundle
-  lint:
-    executor: default
-    steps:
-      - bundle
-      - lint
   rspec:
     executor: default
     steps:
@@ -56,5 +45,4 @@ workflows:
   build:
     jobs:
       - bundle
-      - lint
       - rspec
