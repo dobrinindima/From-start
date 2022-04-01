@@ -31,10 +31,6 @@ commands:
                               $TEST_FILES
 
 jobs:
-  bundle:
-    executor: default
-    steps:
-      - bundle
   rspec:
     executor: default
     steps:
@@ -44,5 +40,4 @@ jobs:
 workflows:
   build:
     jobs:
-      - bundle
       - rspec
